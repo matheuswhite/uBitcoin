@@ -25,8 +25,8 @@
 #ifndef __RFC6979_H__
 #define __RFC6979_H__
 
-#include <stdint.h>
 #include "bignum.h"
+#include <stdint.h>
 
 // rfc6979 pseudo random number generator state
 typedef struct {
@@ -34,8 +34,7 @@ typedef struct {
 } rfc6979_state;
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 void init_rfc6979(const uint8_t *priv_key, const uint8_t *hash, rfc6979_state *rng);

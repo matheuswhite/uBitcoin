@@ -3,18 +3,17 @@
 
 #include <stdint.h>
 
-#define RIPEMD160_BLOCK_LENGTH   64
-#define RIPEMD160_DIGEST_LENGTH  20
+#define RIPEMD160_BLOCK_LENGTH  64
+#define RIPEMD160_DIGEST_LENGTH 20
 
 typedef struct _RIPEMD160_CTX {
-    uint32_t total[2];    /*!< number of bytes processed  */
-    uint32_t state[5];    /*!< intermediate digest state  */
-    uint8_t buffer[RIPEMD160_BLOCK_LENGTH];   /*!< data block being processed */
+	uint32_t total[2];                      /*!< number of bytes processed  */
+	uint32_t state[5];                      /*!< intermediate digest state  */
+	uint8_t buffer[RIPEMD160_BLOCK_LENGTH]; /*!< data block being processed */
 } RIPEMD160_CTX;
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 void ripemd160_Init(RIPEMD160_CTX *ctx);

@@ -6,12 +6,12 @@
 
 /* Change this config file to adjust to your framework */
 #ifndef USE_STDONLY
-  #ifdef ARDUINO
-  #include <Arduino.h>
-  #else
-  #define MBED
-  #include <mbed.h>
-  #endif
+#ifdef ARDUINO
+#include <Arduino.h>
+#else
+#define MBED
+#include <mbed.h>
+#endif
 #endif
 
 /* If you don't have a Stream class in your framework you can implement one
@@ -36,18 +36,18 @@
 #endif
 
 #ifdef USE_STDONLY
- #ifndef USE_ARDUINO_STRING
-  #define USE_ARDUINO_STRING 0 /* Arduino String implementation (WString.h) */
- #endif
- #ifndef USE_ARDUINO_STREAM
-  #define USE_ARDUINO_STREAM 0 /* Arduino Stream class */
- #endif
- #ifndef USE_STD_STRING
-  #define USE_STD_STRING     1 /* Standard library std::string */
- #endif
- #ifndef USE_MBED_STREAM
-  #define USE_MBED_STREAM    0 /* Mbed Stream class */
- #endif
+#ifndef USE_ARDUINO_STRING
+#define USE_ARDUINO_STRING 0 /* Arduino String implementation (WString.h) */
+#endif
+#ifndef USE_ARDUINO_STREAM
+#define USE_ARDUINO_STREAM 0 /* Arduino Stream class */
+#endif
+#ifndef USE_STD_STRING
+#define USE_STD_STRING 1 /* Standard library std::string */
+#endif
+#ifndef USE_MBED_STREAM
+#define USE_MBED_STREAM 0 /* Mbed Stream class */
+#endif
 #endif
 
 #if USE_STD_STRING

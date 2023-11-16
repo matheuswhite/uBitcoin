@@ -30,70 +30,76 @@
 // esp boards
 #if defined(ESP_PLATFORM)
 
-  #include <esp_system.h>
-  uint32_t __attribute__((weak)) random32(void){
-    return esp_random();
-  }
+#include <esp_system.h>
+uint32_t __attribute__((weak)) random32(void)
+{
+	return esp_random();
+}
 
 #elif defined(ESP8266)
-  // see http://esp8266-re.foogod.com/wiki/Random_Number_Generator
-  #define WDEV_HWRNG ((volatile uint32_t*)0x3ff20e44)
-  uint32_t __attribute__((weak)) random32(void){
-    uint32_t rngint = 0;
-    uint32_t v = 0;
-    for(int i=0; i<4; i++){
-      v = (*WDEV_HWRNG);
-      rngint = (rngint << 8) | v;
-    }
-    return rngint;
-  }
+// see http://esp8266-re.foogod.com/wiki/Random_Number_Generator
+#define WDEV_HWRNG ((volatile uint32_t *)0x3ff20e44)
+uint32_t __attribute__((weak)) random32(void)
+{
+	uint32_t rngint = 0;
+	uint32_t v = 0;
+	for (int i = 0; i < 4; i++) {
+		v = (*WDEV_HWRNG);
+		rngint = (rngint << 8) | v;
+	}
+	return rngint;
+}
 
 // stm boards
-#elif defined(STM32F0) || defined(STM32F4) || defined(STM32F7) || defined(STM32L0) || defined(STM32L4) || defined(STM32H7) || defined(STM32WB) || defined(STM32G0)
+#elif defined(STM32F0) || defined(STM32F4) || defined(STM32F7) || defined(STM32L0) ||              \
+	defined(STM32L4) || defined(STM32H7) || defined(STM32WB) || defined(STM32G0)
 
-  #if defined(RNG)
+#if defined(RNG)
 
-    // taken from micropython source code
-    #define RNG_TIMEOUT_MS (10)
+// taken from micropython source code
+#define RNG_TIMEOUT_MS (10)
 
-    uint32_t __attribute__((weak)) random32(void) {
-        // Enable the RNG peripheral if it's not already enabled
-        if (!(RNG->CR & RNG_CR_RNGEN)) {
-            #if defined(STM32H7)
-            // Set RNG Clock source
-            __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLL1_DIVQ);
-            __HAL_RCC_RNG_CONFIG(RCC_RNGCLKSOURCE_PLL);
-            #endif
-            __HAL_RCC_RNG_CLK_ENABLE();
-            RNG->CR |= RNG_CR_RNGEN;
-        }
+uint32_t __attribute__((weak)) random32(void)
+{
+	// Enable the RNG peripheral if it's not already enabled
+	if (!(RNG->CR & RNG_CR_RNGEN)) {
+#if defined(STM32H7)
+		// Set RNG Clock source
+		__HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLL1_DIVQ);
+		__HAL_RCC_RNG_CONFIG(RCC_RNGCLKSOURCE_PLL);
+#endif
+		__HAL_RCC_RNG_CLK_ENABLE();
+		RNG->CR |= RNG_CR_RNGEN;
+	}
 
-        // Wait for a new random number to be ready, takes on the order of 10us
-        uint32_t start = HAL_GetTick();
-        while (!(RNG->SR & RNG_SR_DRDY)) {
-            if (HAL_GetTick() - start >= RNG_TIMEOUT_MS) {
-                return 0;
-            }
-        }
+	// Wait for a new random number to be ready, takes on the order of 10us
+	uint32_t start = HAL_GetTick();
+	while (!(RNG->SR & RNG_SR_DRDY)) {
+		if (HAL_GetTick() - start >= RNG_TIMEOUT_MS) {
+			return 0;
+		}
+	}
 
-        // Get and return the new random number
-        return RNG->DR;
-    }
-  #else
+	// Get and return the new random number
+	return RNG->DR;
+}
+#else
 
-    // fallback to prng
-    #define UBTC_USE_PRNG
+// fallback to prng
+#define UBTC_USE_PRNG
 
-  #endif // defined RNG
+#endif // defined RNG
 
 // PC
-#elif defined(__unix__) || defined(__APPLE__) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__ANDROID__)
+#elif defined(__unix__) || defined(__APPLE__) || defined(_WIN32) || defined(_WIN64) ||             \
+	defined(__CYGWIN__) || defined(__ANDROID__)
 
 // rand from os random source
 #include <stdlib.h>
 
-uint32_t __attribute__((weak)) random32(void){
-    return (uint32_t)rand();
+uint32_t __attribute__((weak)) random32(void)
+{
+	return (uint32_t)rand();
 }
 
 #else
@@ -116,18 +122,18 @@ extern \"C\" { \n\
   }\n\
 }")
 
+uint32_t __attribute__((weak)) random32(void)
+{
+	static uint32_t pad = 0xeda4baba, n = 69, d = 233;
+	static uint8_t dat = 0;
 
-uint32_t __attribute__((weak)) random32(void) {
-    static uint32_t pad = 0xeda4baba, n = 69, d = 233;
-    static uint8_t dat = 0;
+	pad += dat + d * n;
+	pad = (pad << 3) + (pad >> 29);
+	n = pad | 2;
+	d ^= (pad << 31) + (pad >> 1);
+	dat ^= (char)pad ^ (d >> 8) ^ 1;
 
-    pad += dat + d * n;
-    pad = (pad << 3) + (pad >> 29);
-    n = pad | 2;
-    d ^= (pad << 31) + (pad >> 1);
-    dat ^= (char)pad ^ (d >> 8) ^ 1;
-
-    return pad ^ (d << 5) ^ (pad >> 18) ^ (dat << 1);
+	return pad ^ (d << 5) ^ (pad >> 18) ^ (dat << 1);
 }
 
 #endif // UBTC_USE_PRNG
@@ -150,7 +156,8 @@ void __attribute__((weak)) random_buffer(uint8_t *buf, size_t len)
 uint32_t random_uniform(uint32_t n)
 {
 	uint32_t x, max = 0xFFFFFFFF - (0xFFFFFFFF % n);
-	while ((x = random32()) >= max);
+	while ((x = random32()) >= max)
+		;
 	return x / (max / n);
 }
 

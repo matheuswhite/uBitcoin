@@ -21,17 +21,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "bip39.h"
+#include "bip39_english.h"
 #include "hmac.h"
+#include "memzero.h"
+#include "options.h"
+#include "pbkdf2.h"
 #include "rand.h"
 #include "sha2.h"
-#include "pbkdf2.h"
-#include "bip39_english.h"
-#include "options.h"
-#include "memzero.h"
 
 #if USE_BIP39_CACHE
 
@@ -133,7 +133,8 @@ int mnemonic_to_entropy(const char *mnemonic, uint8_t *entropy)
 				return 0;
 			}
 			current_word[j] = mnemonic[i];
-			i++; j++;
+			i++;
+			j++;
 		}
 		current_word[j] = 0;
 		if (mnemonic[i] != 0) {
@@ -185,7 +186,8 @@ int mnemonic_check(const char *mnemonic)
 }
 
 // passphrase must be at most 256 characters otherwise it would be truncated
-void mnemonic_to_seed(const char *mnemonic, const char *passphrase, uint8_t seed[512 / 8], void (*progress_callback)(uint32_t current, uint32_t total))
+void mnemonic_to_seed(const char *mnemonic, const char *passphrase, uint8_t seed[512 / 8],
+		      void (*progress_callback)(uint32_t current, uint32_t total))
 {
 	int mnemoniclen = strlen(mnemonic);
 	int passphraselen = strlen(passphrase);
@@ -193,9 +195,15 @@ void mnemonic_to_seed(const char *mnemonic, const char *passphrase, uint8_t seed
 	// check cache
 	if (mnemoniclen < 256 && passphraselen < 64) {
 		for (int i = 0; i < BIP39_CACHE_SIZE; i++) {
-			if (!bip39_cache[i].set) continue;
-			if (strcmp(bip39_cache[i].mnemonic, mnemonic) != 0) continue;
-			if (strcmp(bip39_cache[i].passphrase, passphrase) != 0) continue;
+			if (!bip39_cache[i].set) {
+				continue;
+			}
+			if (strcmp(bip39_cache[i].mnemonic, mnemonic) != 0) {
+				continue;
+			}
+			if (strcmp(bip39_cache[i].passphrase, passphrase) != 0) {
+				continue;
+			}
 			// found the correct entry
 			memcpy(seed, bip39_cache[i].seed, 512 / 8);
 			return;
@@ -206,7 +214,8 @@ void mnemonic_to_seed(const char *mnemonic, const char *passphrase, uint8_t seed
 	memcpy(salt, "mnemonic", 8);
 	memcpy(salt + 8, passphrase, passphraselen);
 	static CONFIDENTIAL PBKDF2_HMAC_SHA512_CTX pctx;
-	pbkdf2_hmac_sha512_Init(&pctx, (const uint8_t *)mnemonic, mnemoniclen, salt, passphraselen + 8, 1);
+	pbkdf2_hmac_sha512_Init(&pctx, (const uint8_t *)mnemonic, mnemoniclen, salt,
+				passphraselen + 8, 1);
 	if (progress_callback) {
 		progress_callback(0, BIP39_PBKDF2_ROUNDS);
 	}
@@ -230,7 +239,7 @@ void mnemonic_to_seed(const char *mnemonic, const char *passphrase, uint8_t seed
 #endif
 }
 
-const char * const *mnemonic_wordlist(void)
+const char *const *mnemonic_wordlist(void)
 {
 	return wordlist;
 }

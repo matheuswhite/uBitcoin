@@ -25,10 +25,10 @@
 #ifndef __BIGNUM_H__
 #define __BIGNUM_H__
 
+#include "options.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "options.h"
 
 // bignum256 are 256 bits stored as 8*30 bit + 1*16 bit
 // val[0] are lowest 30 bits, val[8] highest 16 bits
@@ -37,8 +37,7 @@ typedef struct {
 } bignum256;
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 // read 4 big endian bytes into uint32
@@ -82,7 +81,8 @@ static inline uint64_t bn_write_uint64(const bignum256 *in_number)
 }
 
 // copies number a to b
-static inline void bn_copy(const bignum256 *a, bignum256 *b) {
+static inline void bn_copy(const bignum256 *a, bignum256 *b)
+{
 	*b = *a;
 }
 
@@ -96,11 +96,13 @@ int bn_is_zero(const bignum256 *a);
 
 void bn_one(bignum256 *a);
 
-static inline int bn_is_even(const bignum256 *a) {
+static inline int bn_is_even(const bignum256 *a)
+{
 	return (a->val[0] & 1) == 0;
 }
 
-static inline int bn_is_odd(const bignum256 *a) {
+static inline int bn_is_odd(const bignum256 *a)
+{
 	return (a->val[0] & 1) == 1;
 }
 
@@ -154,9 +156,12 @@ void bn_divmod58(bignum256 *a, uint32_t *r);
 
 void bn_divmod1000(bignum256 *a, uint32_t *r);
 
-size_t bn_format(const bignum256 *amnt, const char *prefix, const char *suffix, unsigned int decimals, int exponent, bool trailing, char *out, size_t outlen);
+size_t bn_format(const bignum256 *amnt, const char *prefix, const char *suffix,
+		 unsigned int decimals, int exponent, bool trailing, char *out, size_t outlen);
 
-static inline size_t bn_format_uint64(uint64_t amount, const char *prefix, const char *suffix, unsigned int decimals, int exponent, bool trailing, char *out, size_t outlen)
+static inline size_t bn_format_uint64(uint64_t amount, const char *prefix, const char *suffix,
+				      unsigned int decimals, int exponent, bool trailing, char *out,
+				      size_t outlen)
 {
 	bignum256 amnt;
 	bn_read_uint64(amount, &amnt);

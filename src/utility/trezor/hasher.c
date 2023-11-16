@@ -23,7 +23,8 @@
 #include "hasher.h"
 #include "ripemd160.h"
 
-void hasher_Init(Hasher *hasher, HasherType type) {
+void hasher_Init(Hasher *hasher, HasherType type)
+{
 	hasher->type = type;
 
 	switch (hasher->type) {
@@ -41,11 +42,13 @@ void hasher_Init(Hasher *hasher, HasherType type) {
 	}
 }
 
-void hasher_Reset(Hasher *hasher) {
+void hasher_Reset(Hasher *hasher)
+{
 	hasher_Init(hasher, hasher->type);
 }
 
-void hasher_Update(Hasher *hasher, const uint8_t *data, size_t length) {
+void hasher_Update(Hasher *hasher, const uint8_t *data, size_t length)
+{
 	switch (hasher->type) {
 	case HASHER_SHA2:
 	case HASHER_SHA2D:
@@ -61,7 +64,8 @@ void hasher_Update(Hasher *hasher, const uint8_t *data, size_t length) {
 	}
 }
 
-void hasher_Final(Hasher *hasher, uint8_t hash[HASHER_DIGEST_LENGTH]) {
+void hasher_Final(Hasher *hasher, uint8_t hash[HASHER_DIGEST_LENGTH])
+{
 	switch (hasher->type) {
 	case HASHER_SHA2:
 		sha256_Final(&hasher->ctx.sha2, hash);
@@ -85,7 +89,9 @@ void hasher_Final(Hasher *hasher, uint8_t hash[HASHER_DIGEST_LENGTH]) {
 	}
 }
 
-void hasher_Raw(HasherType type, const uint8_t *data, size_t length, uint8_t hash[HASHER_DIGEST_LENGTH]) {
+void hasher_Raw(HasherType type, const uint8_t *data, size_t length,
+		uint8_t hash[HASHER_DIGEST_LENGTH])
+{
 	Hasher hasher;
 
 	hasher_Init(&hasher, type);
