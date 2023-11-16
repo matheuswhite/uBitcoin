@@ -754,9 +754,6 @@ uint8_t PSBT::sign(const HDPrivateKey root)
 								if (txInsMeta[i]
 									    .redeemScript.type() ==
 								    P2WPKH) { // P2SH_P2WPKH
-									// tx.sigHashSegwit(h, i,
-									// txInsMeta[i].redeemScript,
-									// txInsMeta[i].txOut.amount);
 									tx.sigHashSegwit(
 										h, i,
 										pk.publicKey()
@@ -774,9 +771,6 @@ uint8_t PSBT::sign(const HDPrivateKey root)
 								if (txInsMeta[i]
 									    .txOut.scriptPubkey
 									    .type() == P2WPKH) {
-									// tx.sigHashSegwit(h, i,
-									// txInsMeta[i].txOut.scriptPubkey,
-									// txInsMeta[i].txOut.amount);
 									tx.sigHashSegwit(
 										h, i,
 										pk.publicKey()

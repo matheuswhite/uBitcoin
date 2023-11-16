@@ -350,7 +350,6 @@ class HDPrivateKey : public PrivateKey
 
 	int fromSeed(const uint8_t *seed, size_t seedSize,
 		     const Network *network = &DEFAULT_NETWORK);
-	// int fromSeed(const uint8_t seed[64], const Network * network = &DEFAULT_NETWORK);
 	int fromMnemonic(const char *mnemonic, size_t mnemonicSize, const char *password,
 			 size_t passwordSize, const Network *network = &DEFAULT_NETWORK,
 			 void (*progress_callback)(float) = NULL);
@@ -414,7 +413,6 @@ class HDPrivateKey : public PrivateKey
 		p.compressed = true;
 		return p;
 	};
-	//    HDPrivateKey &operator=(const HDPrivateKey &other);                   // assignment
 };
 
 /**
@@ -444,10 +442,6 @@ class HDPublicKey : public PublicKey
 		    const uint8_t parent_fingerprint_arr[4] = NULL, uint32_t childnumber = 0,
 		    const Network *net = &DEFAULT_NETWORK, ScriptType key_type = UNKNOWN_TYPE);
 	HDPublicKey(const char *xpubArr);
-/*    HDPublicKey(const HDPublicKey &other):HDPublicKey(  // copy
-	other.point, other.chainCode, other.depth,
-	other.parentFingerprint, other.childNumber, other.network, other.type){};
-*/
 #if USE_ARDUINO_STRING
 	HDPublicKey(String pub)
 	{
@@ -509,7 +503,6 @@ class HDPublicKey : public PublicKey
 		return derive(path.c_str());
 	};
 #endif
-	//    HDPublicKey &operator=(const HDPublicKey &other);                   // assignment
 };
 
 /**

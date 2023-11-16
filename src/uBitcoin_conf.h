@@ -52,7 +52,6 @@
 
 #if USE_STD_STRING
 #include <string>
-// using std::string;
 #endif
 
 #endif //__UBITCOIN_CONF_H__

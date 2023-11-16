@@ -706,7 +706,6 @@ size_t Witness::from_stream(ParseStream *s)
 		while (s->available() > 0 && cur_bytes_parsed + cur_bytes_read <
 						     cur_element_len + lenVarInt(cur_element_len)) {
 			witnessArray[offset + cur_bytes_parsed + cur_bytes_read] = s->read();
-			// s->read();
 			cur_bytes_read++;
 		}
 		if (cur_bytes_parsed + cur_bytes_read ==

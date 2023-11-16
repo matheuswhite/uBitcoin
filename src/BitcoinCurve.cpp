@@ -114,7 +114,6 @@ ECPoint::ECPoint(const char *arr)
 	ECPoint::parse(arr, strlen(arr));
 };
 
-// bool verify(const Signature sig, const uint8_t hash[32]) const;
 bool ECPoint::isValid() const
 {
 	if (status != PARSING_DONE) {

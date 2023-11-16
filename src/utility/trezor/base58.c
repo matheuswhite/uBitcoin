@@ -21,14 +21,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <stdbool.h>
-#include <string.h>
-// #include <sys/types.h>
 #include "base58.h"
 #include "memzero.h"
 #include "ripemd160.h"
 #include "sha2.h"
+#include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #define ssize_t int32_t
 

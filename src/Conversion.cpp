@@ -20,7 +20,6 @@ size_t toHex(const uint8_t *array, size_t arraySize, char *output, size_t output
 	if (array == NULL || output == NULL) {
 		return 0;
 	}
-	// uint8_t * array = (uint8_t *) arr;
 	if (outputSize < 2 * arraySize) {
 		return 0;
 	}
@@ -295,7 +294,6 @@ size_t toBase58Length(const uint8_t *array, size_t arraySize)
 	 */
 
 	size_t size = (arraySize - zeroCount) * 183 / 134 + 1;
-	// size_t size = (arraySize - zeroCount) * 137 / 100 + 1;
 	return size + zeroCount;
 }
 
@@ -313,7 +311,6 @@ size_t toBase58(const uint8_t *array, size_t arraySize, char *output, size_t out
 	// TODO: refactor with real sizes
 	// size estimation. 56/41 ≈ log(58)/log(256)
 	size_t size = (arraySize - zeroCount) * 183 / 134 + 1;
-	// size_t size = (arraySize - zeroCount) * 137 / 100 + 1;
 	if (outputSize < size + zeroCount) {
 		return 0;
 	}

@@ -54,20 +54,6 @@ HDPrivateKey::HDPrivateKey(const uint8_t secret[32], const uint8_t chain_code[32
 		memzero(parentFingerprint, 4);
 	}
 }
-/*
-HDPrivateKey &HDPrivateKey::operator=(const HDPrivateKey &other){
-    if (this == &other){ return *this; } // self-assignment
-    init();
-    type = other.type;
-    uint8_t secret[32];
-    other.getSecret(secret);
-    setSecret(secret);
-    memcpy(chainCode, other.chainCode, 32);
-    depth = other.depth;
-    childNumber = other.childNumber;
-    memcpy(parentFingerprint, other.parentFingerprint, 4);
-    return *this;
-};*/
 HDPrivateKey::HDPrivateKey(const char *xprvArr)
 {
 	init();
@@ -258,7 +244,6 @@ int HDPrivateKey::fromSeed(const uint8_t *seed, size_t seedSize, const Network *
 	sha.beginHMAC((uint8_t *)key, strlen(key));
 	sha.write(seed, seedSize);
 	sha.endHMAC(raw);
-	// sha512Hmac((byte *)key, strlen(key), seed, 64, raw);
 	memcpy(num, raw, 32);
 	network = net;
 	memcpy(chainCode, raw + 32, 32);
@@ -266,9 +251,6 @@ int HDPrivateKey::fromSeed(const uint8_t *seed, size_t seedSize, const Network *
 	pubKey.compressed = true;
 	return 1;
 }
-// int HDPrivateKey::fromSeed(const uint8_t seed[64], const Network * net){
-//     fromSeed(seed, 64);
-// }
 int HDPrivateKey::fromMnemonic(const char *mnemonic, size_t mnemonicSize, const char *password,
 			       size_t passwordSize, const Network *net,
 			       void (*progress_callback)(float))
@@ -732,18 +714,6 @@ HDPublicKey::HDPublicKey(const uint8_t p[64], const uint8_t chain_code[32], uint
 		memzero(parentFingerprint, 4);
 	}
 }
-/*
-HDPublicKey &HDPublicKey::operator=(const HDPublicKey &other){
-    if (this == &other){ return *this; } // self-assignment
-    type = other.type;
-    memcpy(point, other.point, 64);
-    memcpy(chainCode, other.chainCode, 32);
-    compressed = true;
-    depth = other.depth;
-    childNumber = other.childNumber;
-    memcpy(parentFingerprint, other.parentFingerprint, 4);
-    return *this;
-};*/
 HDPublicKey::HDPublicKey(const char *xpubArr)
 {
 	reset();

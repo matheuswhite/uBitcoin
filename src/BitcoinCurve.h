@@ -99,7 +99,6 @@ class ECPoint : public Streamable
 		return toHex(arr, sizeof(arr));
 	};
 #endif
-	// bool verify(const Signature sig, const uint8_t hash[32]) const;
 	virtual bool isValid() const;
 	/** \brief checks if pubkey has even Y coordinate */
 	bool isEven() const;

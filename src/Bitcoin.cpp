@@ -607,15 +607,6 @@ PrivateKey::PrivateKey(const ECScalar other)
 	pubKey.compressed = true;
 	network = &DEFAULT_NETWORK;
 }
-/*PrivateKey &PrivateKey::operator=(const PrivateKey &other){
-    if (this == &other){ return *this; } // self-assignment
-    reset();
-    other.getSecret(num);
-    network = other.network;
-    pubKey = *this * GeneratorPoint;
-    pubKey.compressed = other.pubKey.compressed;
-    return *this;
-};*/
 PrivateKey::~PrivateKey(void)
 {
 	reset();
